@@ -1,8 +1,50 @@
 <html>
   <head>
     <title>Chat</title>
+    <style>
+      input { display: block; }
+      ul { list-style: none; }
+    </style>
   </head>
+
   <body>
-    Let's chat! (from template)
+    <ul id="messages"></ul>
+    WebSocketを使ったチャットアプリ
+    <form id="chatbox" action="index.html" method="post">
+      <textarea></textarea>
+      <input type="submit" value="送信" />
+    </form>
   </body>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      var socket = null;
+      var msgBox = $("#chatbox textarea");
+      var messages = $("#messages");
+
+      $("#chatbox").submit(function () {
+        if (!msgBox.val()) return false;
+        if (!socket) {
+          alert("Error: WebSocket接続が行われていません。");
+          return false;
+        }
+        socket.send(msgBox.val());
+        msgBox.val("");
+        return false;
+      });
+
+      if (!window["WebSocket"]) {
+        alert("Error: WebSocketに対応していないブラウザです。")
+      } else {
+        socket = new WebSocket("ws://localhost:8080/room");
+        socket.onclose = function () {
+          alert("接続が終了しました。");
+        }
+        socket.onmessage = function (e) {
+          messages.append($("<li>").text(e.data));
+        }
+      }
+    })
+  </script>
 </html>
