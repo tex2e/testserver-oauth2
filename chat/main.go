@@ -8,6 +8,10 @@ import (
     "path/filepath"
     "sync"
     "flag"
+
+    "github.com/stretchr/gomniauth"
+    "github.com/stretchr/gomniauth/providers/google"
+    // "github.com/stretchr/objx"
 )
 
 type templateHandler struct {
@@ -28,8 +32,16 @@ func main() {
     var addr = flag.String("addr", ":8080", "Application Address")
     flag.Parse()
 
+    gomniauth.SetSecurityKey(securityKey)
+    gomniauth.WithProviders(
+        google.New(googleClientID, googleSecret,
+            "http://localhost:8080/auth/callback/google"),
+    )
+
     r := newRoom()
-    http.Handle("/", &templateHandler{filename: "chat.html"})
+    http.Handle("/chat", MustAuth(&templateHandler{filename: "chat.html"}))
+    http.Handle("/login", &templateHandler{filename: "login.html"})
+    http.HandleFunc("/auth/", loginHandler)
     http.Handle("/room", r)
 
     go r.run()
