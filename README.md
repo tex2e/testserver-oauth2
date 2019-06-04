@@ -1,9 +1,22 @@
 
 # TestServer
 
-Chat App using WebSocket, and Authorization with OAuth2.
+Chat App using WebSocket, and Authorization with OAuth 2.0.
 
-### Execute
+WebSocketを使ったチャットアプリと、OAuth 2.0によるユーザ認証
+
+TODO: Migrate from Oauth 2.0 to OpenID Connect
+
+### Requirements
+
+- Golang
+- go get github.com/gorilla/websocket
+- go get github.com/stretchr/gomniauth
+- go get github.com/stretchr/gomniauth/providers/google
+- go get github.com/stretchr/gomniauth/providers/github
+- go get github.com/stretchr/objx
+
+### Execution
 
 Type following:
 
